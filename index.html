@@ -695,6 +695,37 @@ s.innerHTML=h; })();
 render();
 (async ()=>{
 try {
+  <script>
+/* 백업 버튼: 바로 공유 메뉴(구글 드라이브 등)로 보내기 */
+(function(){
+const imp=document.getElementById('imp'); if(imp) imp.accept='.json,.txt,application/json,text/plain';
+const all=s=>new Promise((res,rej)=>{const r=indexedDB.open('moon-diary',1);r.onsuccess=()=>{const out={};const q=r.result.transaction(s).objectStore(s).openCursor();q.onsuccess=()=>{const c=q.result;if(c){out[c.key]=c.value;c.continue();}else res(out);};q.onerror=()=>rej(q.error);};r.onerror=()=>rej(r.error);});
+const toURL=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b);});
+document.addEventListener('click',async e=>{
+if(!e.target.closest||!e.target.closest('#exp'))return;
+e.preventDefault();e.stopImmediatePropagation();
+const msg=document.getElementById('bkMsg');msg.textContent='백업 파일 만드는 중…';
+if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+await new Promise(r=>setTimeout(r,900));
+try{
+const E=await all('entries'),P=await all('photos'),F=await all('fonts');
+const photos={},fonts={};
+for(const k in E)for(const id of(E[k].p||[]))if(P[id])photos[id]=await toURL(P[id]);
+for(const id in F)if(F[id]&&F[id].blob)fonts[id]={name:F[id].name,data:await toURL(F[id].blob)};
+const bgPhoto=F.__bgphoto?F.__bgphoto.data:null;
+const json=JSON.stringify({app:'two-year-moon-diary',v:2,saved:new Date().toISOString(),entries:E,photos,fonts,bg:bgPhoto?'photo:mine':'',bgPhoto});
+const d=new Date(),name=`달일기-백업-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.txt`;
+const file=new File([json],name,{type:'text/plain'});
+if(navigator.canShare&&navigator.canShare({files:[file]})){
+try{await navigator.share({files:[file],title:'소11C.D 백업'});msg.textContent='공유 메뉴에서 고른 곳에 백업을 보냈어요.';}
+catch(err){msg.textContent=err&&err.name==='AbortError'?'백업 보내기를 취소했어요.':'공유가 안 돼서 다운로드 폴더에 받을게요.';if(!(err&&err.name==='AbortError'))dl(file);}
+}else{dl(file);msg.textContent='이 폰에서는 바로 보내기가 안 돼서 다운로드 폴더에 받았어요.';}
+}catch(err){msg.textContent='백업 파일을 만들지 못했어요.';}
+},true);
+function dl(file){const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=file.name;document.body.appendChild(a);a.click();a.remove();}
+const b=document.getElementById('exp');if(b)b.textContent='백업 보내기 (드라이브·카톡)';
+})();
+</script>
 E = await idb.all('entries');
 const fs = await idb.all('fonts');
 if (fs.__bgphoto && fs.__bgphoto.data){ MYBG=fs.__bgphoto.data; applyBg('photo:mine'); }
