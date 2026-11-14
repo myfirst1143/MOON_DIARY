@@ -161,7 +161,7 @@ body.light .face[data-s="+"]{color:#b8862a}body.light .face[data-s="-"]{color:#5
 .sheet{position:fixed;inset:0;background:rgba(10,8,25,.72);display:flex;align-items:flex-end;justify-content:center;z-index:6}
 .sheet[hidden]{display:none}
 .panel{background:var(--sheet);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));width:min(560px,100%);max-height:86vh;overflow:auto}
-  .panel h2{margin:0 0 4px;font:700 19px "Gowun Batang",serif;color:var(--moon)}
+.panel h2{margin:0 0 4px;font:700 19px "Gowun Batang",serif;color:var(--moon)}
 .panel p{margin:0 0 12px;font-size:14px;color:var(--soft)}
 .ph-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
 .x{background:none;border:0;color:var(--soft);font-size:15px;min-height:40px;cursor:pointer}
@@ -353,7 +353,7 @@ const od = new Date(y-1, m, (m===1&&d===29)?28:d);
 return { now:key(y,m,d), old:dkey(od), oldOk:inRange(od), y, m, d };
 }
 const allFonts = () => BUILTIN.concat(FONTS);
-  const fontName = fam => (allFonts().find(f=>f.fam===fam)||BUILTIN[0]).name;
+const fontName = fam => (allFonts().find(f=>f.fam===fam)||BUILTIN[0]).name;
 const entry = k => E[k] || (E[k] = {h:'',m:null,f:null,p:[]});
 function moonCount(){
 const y=cur.getFullYear(), m=cur.getMonth(), days=new Date(y,m+1,0).getDate();
@@ -568,7 +568,7 @@ try { const ff=new FontFace(fam, await blob.arrayBuffer()); await ff.load(); doc
 FONTS.push({id,name,fam}); return true;
 }
 $('fontFile').addEventListener('change', async e=>{
-  const files=[...e.target.files]; e.target.value='';
+const files=[...e.target.files]; e.target.value='';
 let bad=0;
 for (const f of files){ const id='f'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); const name=f.name.replace(/\.[^.]+$/,'');
 if (await addFont(id,name,f)) await put('fonts',id,{name,blob:f}); else bad++; }
@@ -695,8 +695,17 @@ s.innerHTML=h; })();
 render();
 (async ()=>{
 try {
-  <script>
-/* 백업 버튼: 바로 공유 메뉴(구글 드라이브 등)로 보내기 */
+E = await idb.all('entries');
+const fs = await idb.all('fonts');
+if (fs.__bgphoto && fs.__bgphoto.data){ MYBG=fs.__bgphoto.data; applyBg('photo:mine'); }
+for (const id in fs){ if(id==='__bg'||id==='__bgphoto') continue; await addFont(id, fs[id].name, fs[id].blob); }
+} catch(e){ IDB_OK=false; setStatus('이 화면에서는 저장이 안 될 수 있어요', true); }
+render();
+})();
+if ('serviceWorker' in navigator && location.protocol==='https:' && !window.claude){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+}
+</script>
+<script>
 (function(){
 const imp=document.getElementById('imp'); if(imp) imp.accept='.json,.txt,application/json,text/plain';
 const all=s=>new Promise((res,rej)=>{const r=indexedDB.open('moon-diary',1);r.onsuccess=()=>{const out={};const q=r.result.transaction(s).objectStore(s).openCursor();q.onsuccess=()=>{const c=q.result;if(c){out[c.key]=c.value;c.continue();}else res(out);};q.onerror=()=>rej(q.error);};r.onerror=()=>rej(r.error);});
@@ -726,16 +735,5 @@ function dl(file){const a=document.createElement('a');a.href=URL.createObjectURL
 const b=document.getElementById('exp');if(b)b.textContent='백업 보내기 (드라이브·카톡)';
 })();
 </script>
-E = await idb.all('entries');
-const fs = await idb.all('fonts');
-if (fs.__bgphoto && fs.__bgphoto.data){ MYBG=fs.__bgphoto.data; applyBg('photo:mine'); }
-for (const id in fs){ if(id==='__bg'||id==='__bgphoto') continue; await addFont(id, fs[id].name, fs[id].blob); }
-} catch(e){ IDB_OK=false; setStatus('이 화면에서는 저장이 안 될 수 있어요', true); }
-render();
-})();
-if ('serviceWorker' in navigator && location.protocol==='https:' && !window.claude){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
-}
-</script>
 </body>
 </html>
-  
