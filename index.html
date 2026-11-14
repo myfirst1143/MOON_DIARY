@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+<meta name="theme-color" content="#0b2d48">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="소11C.D">
+<title>소11C.D</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Nanum+Myeongjo:wght@400;700&family=Nanum+Pen+Script&family=Gamja+Flower&family=Hi+Melody&family=Do+Hyeon&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--sky:#332d78;--sky2:color-mix(in oklch,var(--sky),#3d3590 30%);--glow:color-mix(in oklch,var(--sky),#c9bbff 28%);
+--card:rgba(255,255,255,.055);--line:rgba(244,238,219,.12);--moon:#f4eedb;--ink:#ece8f6;--soft:#a39dc0;--lilac:#b9a8f0;
+--sheet:color-mix(in oklch,var(--sky),white 10%);--star:#f4eedb;--mhi:#fffaf0;--mlo:#e9dfc4;--mbase:rgba(244,238,219,.12);--medge:rgba(244,238,219,.25)}
+body.light{color-scheme:light;--sky2:color-mix(in oklch,var(--sky),#e6f0ff 22%);--glow:color-mix(in oklch,var(--sky),white 60%);
+--card:rgba(255,255,255,.5);--line:rgba(40,30,60,.13);--moon:#2f2645;--ink:#251f30;--soft:#6c6479;--lilac:#6c55c9;
+--sheet:color-mix(in oklch,var(--sky),white 55%);--star:#8a7fb0;--mhi:#f3dc9c;--mlo:#d8b867;--mbase:rgba(60,45,100,.07);--medge:rgba(60,45,100,.22)}
+body.light .tb{background:color-mix(in oklch,var(--sky),white 70%)}
+*{box-sizing:border-box;min-width:0}
+html{background:var(--sky)}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.6 "Gowun Dodum",system-ui,sans-serif;overflow-x:clip;
+background:radial-gradient(120% 60% at 50% 0%,var(--glow) 0%,var(--sky2) 38%,var(--sky) 75%) fixed}
+body.typing{padding-bottom:120px}
+button{font:inherit;color:inherit}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;width:100%;height:100%;color:var(--star)}
+body.light #stars{opacity:.35}
+body.light .slider{filter:drop-shadow(0 6px 24px rgba(180,140,60,.25))}
+.bgimg{position:fixed;inset:0;z-index:0;display:none;background-position:var(--bx,50%) top;transition:background-position 1.4s ease;background-size:cover;background-repeat:no-repeat}
+.bgimg::after{content:"";position:absolute;inset:0;background:
+linear-gradient(to right,rgba(2,14,26,var(--dl,0)),rgba(2,14,26,var(--dr,0))),
+linear-gradient(to bottom,rgba(2,20,36,.4) 0%,rgba(2,20,36,.36) 35%,rgba(2,14,26,.6) 100%)}
+.rays{position:fixed;inset:0;z-index:0;pointer-events:none;display:none;mix-blend-mode:screen;transition:opacity 1s;
+background:radial-gradient(55% 32% at var(--lx,50%) -6%,rgba(170,235,255,.32),transparent 72%),
+repeating-conic-gradient(from 0deg at var(--lx,50%) -12%,rgba(190,240,255,.06) 0deg 1.6deg,transparent 1.6deg 4.5deg,rgba(190,240,255,.035) 4.5deg 6deg,transparent 6deg 10deg);
+-webkit-mask-image:radial-gradient(90% 85% at var(--lx,50%) 0%,#000 0%,transparent 78%);mask-image:radial-gradient(90% 85% at var(--lx,50%) 0%,#000 0%,transparent 78%)}
+body.photo .rays{display:block}
+body.photo .bgimg{display:block}
+body.photo #stars,body.photo .water{display:none}
+.photo{--mbase:rgba(255,255,255,.13);--medge:rgba(220,245,255,.4);--soft:#a9c6d6;--lilac:#9fdcf2}
+body.photo .card,body.photo .note,body.photo .ghost,body.photo .fontpick,body.photo .nav>button.arw,body.photo .feel,body.photo .picker,body.photo .face{
+background:linear-gradient(160deg,rgba(10,45,72,.5),rgba(4,24,42,.42));border-color:rgba(190,235,255,.2);
+backdrop-filter:blur(18px) saturate(105%);-webkit-backdrop-filter:blur(18px) saturate(105%);
+box-shadow:inset 0 1px 0 rgba(200,240,255,.18),0 14px 34px -20px rgba(0,0,0,.6)}
+body.photo .card.now{background:linear-gradient(160deg,rgba(12,52,82,.55),rgba(4,26,46,.5))}
+body.photo .brand,body.photo .count{text-shadow:0 1px 6px rgba(0,20,40,.7)}
+body.photo .slider{filter:drop-shadow(0 0 40px rgba(170,230,255,.35))}
+.sw.photo{background-size:cover;background-position:center;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.water{position:fixed;inset:-10%;pointer-events:none;z-index:0;
+background:radial-gradient(38% 26% at 18% 28%,rgba(255,255,255,.14),transparent 70%),
+radial-gradient(34% 30% at 86% 58%,rgba(200,225,255,.12),transparent 70%),
+radial-gradient(46% 22% at 40% 92%,rgba(255,255,255,.10),transparent 70%);filter:blur(10px)}
+body.light .water{background:radial-gradient(38% 26% at 18% 28%,rgba(255,255,255,.75),transparent 70%),
+radial-gradient(34% 30% at 86% 58%,rgba(215,235,255,.6),transparent 70%),
+radial-gradient(46% 22% at 40% 92%,rgba(255,255,255,.6),transparent 70%)}
+@media (prefers-reduced-motion:no-preference){.water{animation:drift 18s ease-in-out infinite alternate}@keyframes drift{to{transform:translate(2%,-2%) scale(1.04)}}}
+.card,.note,.ghost,.fontpick,.nav>button.arw,.feel,.picker,.face{
+background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.035));
+border-color:rgba(255,255,255,.16);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
+box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 12px 30px -20px rgba(0,0,0,.45)}
+.card.now{background:linear-gradient(160deg,rgba(255,255,255,.16),rgba(255,255,255,.05));border-color:rgba(255,255,255,.22)}
+body.light .card,body.light .note,body.light .ghost,body.light .fontpick,body.light .nav>button.arw,body.light .feel,body.light .picker,body.light .face{
+background:linear-gradient(160deg,rgba(255,255,255,.62),rgba(255,255,255,.22));border-color:rgba(255,255,255,.75);
+box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 12px 30px -20px rgba(120,80,110,.35)}
+body.light .card.now{background:linear-gradient(160deg,rgba(255,255,255,.7),rgba(255,255,255,.3))}
+.wrap{position:relative;z-index:1;max-width:560px;margin:0 auto;padding:18px 18px 48px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.brand{font:700 15px "Gowun Batang",serif;color:var(--moon);opacity:.85}
+.tools{display:flex;gap:6px}
+.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;height:38px;padding:0 13px;font-size:13px;cursor:pointer;white-space:nowrap}
+.hero{display:grid;justify-items:center;padding:14px 0 4px;text-align:center}
+.slider{width:min(46vw,190px);aspect-ratio:1;border-radius:50%;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;
+filter:drop-shadow(0 0 34px rgba(244,238,219,.28));overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.slider::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;height:100%;scroll-snap-align:center;scroll-snap-stop:always;display:grid;place-items:center;border-radius:50%;overflow:hidden}
+.slide svg{width:100%;height:100%;display:block}
+.slide img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.slide.add button{width:100%;height:100%;border-radius:50%;border:1.5px dashed var(--soft);background:var(--card);color:var(--moon);font-size:46px;font-weight:300;cursor:pointer}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:12px;min-height:6px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--soft);opacity:.35;transition:opacity .2s}
+.dots i.on{opacity:1;background:var(--moon)}
+.count{margin:14px 0 0;font-size:14px;color:var(--soft)}
+.count b{color:var(--moon);font-weight:400}
+.nav{display:flex;align-items:center;gap:8px;margin:18px 0 4px}
+.nav>button.arw{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--moon);font-size:20px;cursor:pointer;flex:none}
+.nav>button.arw:disabled{opacity:.3}
+.datebtn{flex:1;text-align:center;background:none;border:0;cursor:pointer;padding:0}
+.datebtn h1{margin:0;font:700 clamp(28px,8vw,36px)/1.1 "Gowun Batang",serif;color:var(--moon)}
+.datebtn small{display:block;font-size:13px;color:var(--soft);margin-top:4px}
+.backto{display:block;margin:4px auto 0;background:none;border:0;color:var(--lilac);font-size:14px;min-height:36px;cursor:pointer}
+.backto[hidden]{display:none}
+.note{margin:10px 0 0;padding:12px 14px;border-radius:14px;background:rgba(185,168,240,.1);color:var(--ink);font-size:14px;text-align:center}
+.note[hidden]{display:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 18px 12px;margin-top:14px}
+.card.now{border-color:rgba(185,168,240,.35);background:rgba(185,168,240,.07)}
+.card.mini{padding:12px 16px;color:var(--soft);font-size:14px}
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.yr{font:700 19px "Gowun Batang",serif;color:var(--moon)}
+.tag{font-size:13px;color:var(--soft);white-space:nowrap}
+.ed{font:17px/1.85 "Gowun Batang",serif;color:var(--ink);min-height:180px;outline:none;word-break:break-word;white-space:pre-wrap;padding:2px 0}
+.ed:empty::before{content:attr(data-ph);color:rgba(163,157,192,.7)}
+.ed:focus-visible{box-shadow:0 0 0 2px rgba(185,168,240,.5);border-radius:6px}
+.ed.view{min-height:0;opacity:.9}
+.empty{color:var(--soft);font-size:15px;margin:4px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.link{background:none;border:0;color:var(--soft);font-size:14px;text-decoration:underline;text-underline-offset:3px;min-height:40px;padding:0;cursor:pointer}
+.status{font-size:13px;color:var(--soft)}
+.status.warn{color:#f5a3a3}
+.opts{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:2px 0 8px}
+.opts .lbl{font-size:13px;color:var(--soft);margin-right:2px}
+.mood{width:40px;height:40px;border-radius:50%;border:1px solid transparent;background:none;cursor:pointer;padding:6px;display:grid;place-items:center}
+.mood svg{width:100%;height:100%}
+.mood[aria-pressed=true]{border-color:var(--lilac);background:rgba(185,168,240,.14)}
+.moodname{font-size:13px;color:var(--lilac);font-style:normal}
+.sky{display:flex;align-items:center;gap:10px;margin:2px 0 10px}
+.sky .m{width:34px;height:34px;flex:none}
+.sky b{font-weight:400;color:var(--moon)}.sky small{color:var(--soft);font-size:13px;margin-left:6px}
+.mind{display:flex;align-items:center;gap:10px;min-height:40px;flex-wrap:wrap;margin:0 0 10px}
+.mind .lbl{font-size:13px;color:var(--soft)}
+.face{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--card);padding:0;cursor:pointer}
+.face .sym{display:block;font:400 15px/16px system-ui,sans-serif}
+.face[data-s="+"]{color:#f0c878}.face[data-s="-"]{color:#a9b4ec}
+body.light .face[data-s="+"]{color:#b8862a}body.light .face[data-s="-"]{color:#5a68b8}
+.face[aria-pressed=true]{border-color:var(--lilac);background:rgba(185,168,240,.16)}
+.feel{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 4px 4px 10px;font-size:14px;border:1px solid var(--line);background:var(--card)}
+.feel.pos{border-color:rgba(240,200,120,.45)}.feel.neg{border-color:rgba(160,170,230,.45)}
+.feel .dm{display:inline-flex;gap:2px}.feel .dm svg{width:12px;height:12px}
+.feel button{background:none;border:0;color:var(--soft);width:28px;height:28px;cursor:pointer;font-size:15px}
+.feels{display:flex;flex-wrap:wrap;gap:6px;margin:-2px 0 10px}
+.picker{border:1px solid var(--line);border-radius:16px;padding:12px;margin:0 0 12px;background:var(--card)}
+.picker .q{font-size:14px;color:var(--soft);margin:0 0 10px}
+.picker .path{font:700 17px "Gowun Batang",serif;color:var(--moon);margin:0 0 4px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
+.picker .path i{font-style:normal;color:var(--soft);font-weight:400}
+.picker .depth{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--soft);margin:0 0 10px}
+.picker .depth svg{width:14px;height:14px}
+.words{display:flex;flex-wrap:wrap;gap:6px}
+.word{border:1px solid var(--line);background:transparent;border-radius:999px;min-height:40px;padding:0 14px;font-size:15px;cursor:pointer}
+.word:active{background:rgba(185,168,240,.18)}
+.pacts{display:flex;justify-content:space-between;margin-top:10px}
+.swatches{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sw{border:2px solid var(--line);border-radius:14px;height:64px;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;font-size:12px}
+.sw.on{border-color:var(--lilac)}
+.custom{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14px}
+.custom input{width:56px;height:44px;border:1px solid var(--line);border-radius:12px;background:none;padding:2px}
+.fontpick{background:var(--card);border:1px solid var(--line);border-radius:999px;height:36px;padding:0 14px;font-size:15px;cursor:pointer}
+.pics{font-size:13px;color:var(--soft)}
+/* 글씨 도구 막대 */
+.tb{position:fixed;left:0;right:0;bottom:0;z-index:4;background:rgba(27,24,58,.97);border-top:1px solid var(--line);padding:8px 10px calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+.tb[hidden]{display:none}
+.tb .chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.tb .chips::-webkit-scrollbar{display:none}
+.chip{flex:none;background:var(--card);border:1px solid var(--line);border-radius:999px;height:40px;padding:0 14px;font-size:16px;cursor:pointer;white-space:nowrap}
+.tb .acts{display:flex;gap:6px}
+.tb .acts .chip{flex:1;font-family:"Gowun Dodum",sans-serif;font-size:14px}
+.tb .hint{font-size:12px;color:var(--soft);text-align:center}
+/* 시트 */
+.sheet{position:fixed;inset:0;background:rgba(10,8,25,.72);display:flex;align-items:flex-end;justify-content:center;z-index:6}
+.sheet[hidden]{display:none}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:20px 20px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom));width:min(560px,100%);max-height:86vh;overflow:auto}
+  .panel h2{margin:0 0 4px;font:700 19px "Gowun Batang",serif;color:var(--moon)}
+.panel p{margin:0 0 12px;font-size:14px;color:var(--soft)}
+.ph-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.x{background:none;border:0;color:var(--soft);font-size:15px;min-height:40px;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center}
+.wd{font-size:12px;color:var(--soft);padding:2px 0 4px}
+.day{position:relative;height:52px;border:0;border-radius:12px;background:transparent;font-size:14px;cursor:pointer;padding:4px 0 0;display:flex;flex-direction:column;align-items:center;gap:2px}
+.day:disabled{opacity:.22;cursor:default}
+.day.out{visibility:hidden}
+.day.sel{background:rgba(185,168,240,.18)}
+.day.today .n{color:var(--moon);font-weight:700;border-bottom:1px solid var(--moon)}
+.day .m{width:18px;height:18px}
+.day .m.dim{opacity:.3}
+body.light .day .m.dim{opacity:.4}
+.day .od{position:absolute;top:6px;right:8px;width:5px;height:5px;border-radius:50%;background:var(--soft);opacity:.7}
+.mnav{display:flex;align-items:center;justify-content:space-between;margin:6px 0 10px}
+.mnav h3{margin:0;font:700 17px "Gowun Batang",serif;color:var(--moon)}
+.mnav button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer}
+.mnav button:disabled{opacity:.25}
+.flist{display:grid;gap:8px}
+.frow{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 6px 6px 14px}
+.frow.on{border-color:var(--lilac);background:rgba(185,168,240,.12)}
+.frow button.pick{flex:1;text-align:left;background:none;border:0;cursor:pointer;padding:6px 0;min-height:44px}
+.frow .fn{display:block;font-size:12px;color:var(--soft);font-family:"Gowun Dodum",sans-serif}
+.frow .fs{display:block;font-size:19px;line-height:1.3;color:var(--ink)}
+.frow .del{background:none;border:0;color:var(--soft);font-size:13px;min-height:40px;padding:0 10px;cursor:pointer}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{background:var(--card);border:1px solid var(--line);border-radius:12px;min-height:44px;padding:0 16px;font-size:14px;cursor:pointer;display:inline-flex;align-items:center}
+.btn.primary{background:var(--lilac);color:#1b1640;border-color:transparent}
+.hidden-input{display:none}
+/* 사진 크게 보기 */
+.viewer{position:fixed;inset:0;background:#08070f;z-index:7;display:flex;flex-direction:column}
+.viewer[hidden]{display:none}
+.vtop{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;color:var(--soft);font-size:14px}
+.vimg{flex:1;display:grid;place-items:center;position:relative;overflow:hidden}
+.vimg img{max-width:100%;max-height:100%;object-fit:contain}
+.vimg .side{position:absolute;top:0;bottom:0;width:30%;background:none;border:0;cursor:pointer}
+.vimg .l{left:0}.vimg .r{right:0}
+@media (prefers-reduced-motion:no-preference){.tw{animation:tw 4s ease-in-out infinite}@keyframes tw{50%{opacity:.25}}}
+</style>
+</head>
+<body>
+<div class="bgimg" id="bgimg" aria-hidden="true"></div>
+<div class="water" aria-hidden="true"></div>
+<svg id="stars" aria-hidden="true"></svg>
+<div class="wrap">
+<div class="top"><span class="brand">소11C.D</span>
+<div class="tools"><button class="ghost" id="openCal">달력</button><label class="ghost" style="display:inline-flex;align-items:center;cursor:pointer">배경<input type="file" class="hidden-input" id="bgFile" accept="image/*"></label><button class="ghost" id="openBackup">백업</button></div></div>
+<div class="hero">
+<div class="slider" id="slider" aria-label="달을 옆으로 밀면 그날 사진"></div>
+<p class="count" id="count"></p>
+</div>
+<div class="nav">
+<button class="arw" id="prev" aria-label="전날">‹</button>
+<button class="datebtn" id="dateBtn"><h1 id="dTitle"></h1><small id="dSub"></small></button>
+<button class="arw" id="next" aria-label="다음 날">›</button>
+</div>
+<button class="backto" id="toToday" hidden>오늘로 돌아가기</button>
+<p class="note" id="note" hidden></p>
+<section class="card" id="oldCard">
+<div class="head"><span class="yr" id="oldYr"></span><span class="tag">작년 이날</span></div>
+<div class="feels" id="oldFeels"></div>
+<div class="ed view" id="oldEd" data-ph="작년 이날, 기억나는 대로"></div>
+<div class="row"><button class="link" id="oldBtn">작년 기록 쓰기</button><button class="link" id="oldPics" hidden></button></div>
+</section>
+<section class="card mini" id="oldMini" hidden></section>
+<section class="card now">
+<div class="head"><span class="yr" id="nowYr"></span><span class="tag" id="nowTag"></span></div>
+<div class="sky" id="sky"></div>
+<div id="mind"></div>
+<div class="opts"><span class="lbl">오늘의 글씨체</span><button class="fontpick" id="dayFont">고운바탕</button></div>
+<div class="ed" id="ed" contenteditable="true" data-ph="오늘은 어떤 하루였나요?" aria-label="오늘 일기"></div>
+<div class="row"><span class="pics" id="nowPics"></span><span class="status" id="status">저장됨</span></div>
+</section>
+</div>
+<!-- 글을 쓸 때 아래에 뜨는 글씨 도구 -->
+<div class="tb" id="tb" hidden>
+<div class="chips" id="tbFonts"></div>
+<div class="acts"><button class="chip" data-act="title">제목</button><button class="chip" data-act="bold">강조</button><button class="chip" data-act="plain">원래대로</button></div>
+<div class="hint">고른 글자만 바뀌어요</div>
+</div>
+<div class="sheet" id="calSheet" hidden><div class="panel">
+<div class="ph-head"><h2>달력</h2><button class="x" data-close>닫기</button></div>
+<div class="mnav"><button id="mPrev" aria-label="이전 달">‹</button><h3 id="mTitle"></h3><button id="mNext" aria-label="다음 달">›</button></div>
+<div class="grid" id="grid"></div>
+<p style="margin-top:12px">달은 그날 밤하늘의 달 모양이에요. 밝은 달은 일기를 쓴 날, 작은 점은 작년 이날 기록이 있는 날이에요.</p>
+</div></div>
+<div class="sheet" id="fontSheet" hidden><div class="panel">
+<div class="ph-head"><h2>글씨체</h2><button class="x" data-close>닫기</button></div>
+<p>누르면 이날의 기본 글씨체가 돼요. 폰에 받아 둔 글씨체 파일(.ttf .otf .woff)을 추가할 수 있어요.</p>
+<div class="flist" id="flist"></div>
+<div class="btnrow"><label class="btn primary">글씨체 파일 추가<input type="file" class="hidden-input" id="fontFile" accept=".ttf,.otf,.woff,.woff2,font/*" multiple></label></div>
+</div></div>
+<div class="sheet" id="backupSheet" hidden><div class="panel">
+<div class="ph-head"><h2>백업</h2><button class="x" data-close>닫기</button></div>
+<p>일기·사진·글씨체는 이 폰 안에만 저장돼요. 폰을 바꾸거나 앱 데이터를 지우기 전에 백업 파일을 받아 두세요. 받은 파일은 카카오톡 나에게 보내기나 드라이브에 올려 두면 안전해요.</p>
+<div class="btnrow"><button class="btn primary" id="exp">백업 파일 받기</button><label class="btn">백업 불러오기<input type="file" class="hidden-input" id="imp" accept=".json,application/json"></label></div>
+<p id="bkMsg" style="margin-top:12px"></p>
+</div></div>
+<div class="viewer" id="viewer" hidden>
+<div class="vtop"><span id="vCount"></span><span><button class="x" id="vDel">이 사진 빼기</button> <button class="x" id="vClose">닫기</button></span></div>
+<div class="vimg" id="vArea"><img id="vImg" alt="그날의 사진"></div>
+</div>
+<input type="file" class="hidden-input" id="photoFile" accept="image/*" multiple>
+<script>
+{
+const $ = id => document.getElementById(id);
+const WD = ['일','월','화','수','목','금','토'];
+const MOODS = [{f:.12,n:'흐린 날'},{f:.32,n:'조금 버거운'},{f:.5,n:'그저 그런'},{f:.76,n:'꽤 좋은'},{f:1,n:'가득 찬 날'}];
+const BUILTIN = [
+{fam:'Gowun Batang',name:'고운바탕'},{fam:'Gowun Dodum',name:'고운돋움'},{fam:'Nanum Myeongjo',name:'나눔명조'},
+{fam:'Nanum Pen Script',name:'나눔펜'},{fam:'Gamja Flower',name:'감자꽃'},{fam:'Hi Melody',name:'하이멜로디'},{fam:'Do Hyeon',name:'도현'}];
+const START = new Date(2026,10,15), END = new Date(2028,11,31);
+const pad = n => String(n).padStart(2,'0');
+const key = (y,m,d) => `${y}-${pad(m+1)}-${pad(d)}`;
+const dkey = dt => key(dt.getFullYear(), dt.getMonth(), dt.getDate());
+const today = new Date(); today.setHours(0,0,0,0);
+const inRange = dt => dt>=START && dt<=END;
+const clamp = dt => dt<START ? new Date(START) : dt>END ? new Date(END) : dt;
+let cur = clamp(new Date(today));
+let E = {};              // 날짜 → {h:글(서식), m:달, f:글씨체, p:[사진id]}
+let FONTS = [];          // 사용자 글씨체 {id,name,fam}
+const PURL = {};         // 사진 id → 화면용 주소
+const MEM = {photos:{}, fonts:{}};
+let editingOld = false, calMonth = null, lastSlideKey = null;
+let vList = [], vIdx = 0, vKey = null;
+const timers = {};
+const idb = (()=>{
+let p=null;
+const open = () => p || (p = new Promise((res,rej)=>{ const r=indexedDB.open('moon-diary',1);
+r.onupgradeneeded=()=>{ ['entries','photos','fonts'].forEach(n=>r.result.createObjectStore(n)); };
+r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }));
+const run = async (s,mode,fn) => { const d=await open(); return new Promise((res,rej)=>{ const t=d.transaction(s,mode); const q=fn(t.objectStore(s)); t.oncomplete=()=>res(q&&q.result); t.onerror=()=>rej(t.error); }); };
+return {
+get:(s,k)=>run(s,'readonly',o=>o.get(k)),
+put:(s,k,v)=>run(s,'readwrite',o=>o.put(v,k)),
+del:(s,k)=>run(s,'readwrite',o=>o.delete(k)),
+all: async s => { const d=await open(); return new Promise((res,rej)=>{ const out={}; const q=d.transaction(s).objectStore(s).openCursor();
+q.onsuccess=()=>{ const c=q.result; if(c){ out[c.key]=c.value; c.continue(); } else res(out); }; q.onerror=()=>rej(q.error); }); }
+};
+})();
+let IDB_OK = true;
+const put = async (s,k,v) => { if(IDB_OK){ try{ await idb.put(s,k,v); return; }catch(e){ IDB_OK=false; } } MEM[s]=MEM[s]||{}; MEM[s][k]=v; };
+const del = async (s,k) => { if(IDB_OK){ try{ await idb.del(s,k); return; }catch(e){} } if(MEM[s]) delete MEM[s][k]; };
+const getP = async id => { if(IDB_OK){ try{ return await idb.get('photos',id); }catch(e){} } return MEM.photos[id]; };
+function setStatus(t,warn){ const s=$('status'); s.textContent=t; s.classList.toggle('warn',!!warn); }
+const textOf = h => { const d=document.createElement('div'); d.innerHTML=h||''; return d.textContent.trim(); };
+const has = e => !!e && (textOf(e.h) || (e.p&&e.p.length) || (e.em&&e.em.length));
+const OK_TAGS = new Set(['DIV','P','BR','B','STRONG','I','EM','U','SPAN','FONT']);
+const SIZES = {1:'x-small',2:'small',3:'medium',4:'large',5:'x-large',6:'xx-large',7:'xxx-large'};
+function clean(html){
+const t=document.createElement('template'); t.innerHTML=html||'';
+const walk = node => { [...node.childNodes].forEach(n=>{
+if (n.nodeType===3) return;
+if (n.nodeType!==1 || !OK_TAGS.has(n.tagName)){ if(n.nodeType===1){ walk(n); n.replaceWith(...n.childNodes); } else n.remove(); return; }
+walk(n);
+let ff=n.style?n.style.fontFamily:'', fs=n.style?n.style.fontSize:'', fw=n.style?n.style.fontWeight:'';
+if (n.tagName==='FONT'){ ff=n.getAttribute('face')||ff; if(n.getAttribute('size')) fs=SIZES[n.getAttribute('size')]||fs;
+const sp=document.createElement('span'); sp.append(...n.childNodes); n.replaceWith(sp); n=sp; }
+[...n.attributes].forEach(a=>n.removeAttribute(a.name));
+if (ff) n.style.fontFamily=ff; if (fs) n.style.fontSize=fs; if (fw) n.style.fontWeight=fw;
+if (n.tagName==='SPAN' && !n.getAttribute('style')) n.replaceWith(...n.childNodes);
+}); };
+walk(t.content);
+const d=document.createElement('div'); d.append(t.content); return d.innerHTML;
+}
+function moonPath(cx,cy,r,f){
+if (f<=0.001) return '';
+if (f>=0.999) return `M${cx},${cy-r}A${r},${r} 0 1 1 ${cx},${cy+r}A${r},${r} 0 1 1 ${cx},${cy-r}Z`;
+const rx=Math.abs(1-2*f)*r;
+return `M${cx},${cy-r}A${r},${r} 0 0 1 ${cx},${cy+r}A${rx},${r} 0 0 ${f>0.5?1:0} ${cx},${cy-r}Z`;
+}
+const rad=Math.PI/180, nrm=a=>((a%360)+360)%360;
+function moonInfo(dt){   // 그날 밤 9시(폰 시간) 기준 실제 달
+const t=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate(),21,0);
+const JD=t.getTime()/86400000+2440587.5, T=(JD-2451545)/36525, sn=x=>Math.sin(x*rad);
+const M=357.52911+35999.05029*T, sun=280.46646+36000.76983*T+(1.914602-0.004817*T)*sn(M)+0.019993*sn(2*M);
+const Lp=218.3164477+481267.88123421*T, D=297.8501921+445267.1114034*T, Mp=134.9633964+477198.8675055*T, F=93.2720950+483202.0175233*T;
+const lon=Lp+6.288774*sn(Mp)+1.274027*sn(2*D-Mp)+0.658314*sn(2*D)+0.213618*sn(2*Mp)-0.185116*sn(M)-0.114332*sn(2*F)
++0.058793*sn(2*D-2*Mp)+0.057066*sn(2*D-M-Mp)+0.053322*sn(2*D+Mp)+0.045758*sn(2*D-M)-0.040923*sn(M-Mp)-0.034720*sn(D)-0.030383*sn(M+Mp);
+const e=nrm(lon-sun), k=(1-Math.cos(e*rad))/2;
+const name = e<12||e>348 ? '삭 (달이 보이지 않는 날)' : e<80 ? '초승달' : e<100 ? '상현달' : e<168 ? '차오르는 달' : e<192 ? '보름달' : e<260 ? '기우는 달' : e<280 ? '하현달' : '그믐달';
+return {e, k, wax:e<180, name, age:Math.round(e/360*29.53)};
+}
+const skyMoonSVG = (mi,s,cls) => { const r=s/2-1,c=s/2; return `<svg viewBox="0 0 ${s} ${s}" class="${cls||''}" aria-hidden="true"><circle cx="${c}" cy="${c}" r="${r}" style="fill:var(--mbase);stroke:var(--medge)" stroke-width="${s>30?1:.6}"/><path d="${moonPath(c,c,r,mi.k)}" style="fill:var(--mlo)" ${mi.wax?'':`transform="translate(${s},0) scale(-1,1)"`}/></svg>`; };
+const moonSVG = (f,s,dim) => { const r=s/2-1,c=s/2; return `<svg viewBox="0 0 ${s} ${s}" aria-hidden="true"><circle cx="${c}" cy="${c}" r="${r}" fill="rgba(244,238,219,${dim||.14})"/><path d="${moonPath(c,c,r,f)}" fill="#f4eedb"/></svg>`; };
+function K(){
+const y=cur.getFullYear(), m=cur.getMonth(), d=cur.getDate();
+const od = new Date(y-1, m, (m===1&&d===29)?28:d);
+return { now:key(y,m,d), old:dkey(od), oldOk:inRange(od), y, m, d };
+}
+const allFonts = () => BUILTIN.concat(FONTS);
+  const fontName = fam => (allFonts().find(f=>f.fam===fam)||BUILTIN[0]).name;
+const entry = k => E[k] || (E[k] = {h:'',m:null,f:null,p:[]});
+function moonCount(){
+const y=cur.getFullYear(), m=cur.getMonth(), days=new Date(y,m+1,0).getDate();
+let n=0, total=0;
+for (let d=1; d<=days; d++){ const dt=new Date(y,m,d); if(!inRange(dt)) continue; total++; if(has(E[dkey(dt)])) n++; }
+return {n,total,m};
+}
+function bigMoonSVG(f){
+return `<svg viewBox="0 0 200 200"><defs><radialGradient id="g" cx="40%" cy="38%"><stop offset="0" style="stop-color:var(--mhi)"/><stop offset="1" style="stop-color:var(--mlo)"/></radialGradient></defs>
+<circle cx="100" cy="100" r="92" style="fill:var(--mbase);stroke:var(--medge)"/>
+<path d="${moonPath(100,100,92,f)}" fill="url(#g)"/>
+<circle cx="72" cy="78" r="9" fill="rgba(160,140,110,.12)"/><circle cx="118" cy="122" r="13" fill="rgba(160,140,110,.10)"/><circle cx="128" cy="70" r="5" fill="rgba(160,140,110,.12)"/></svg>`;
+}
+function drawMoon(keepPos){
+const k=K(), pics=((E[k.now]||{}).p)||[], c=moonCount(), sl=$('slider');
+const pos = keepPos ? Math.round(sl.scrollLeft/(sl.clientWidth||1)) : 0;
+sl.innerHTML = `<div class="slide">${bigMoonSVG(c.total?c.n/c.total:0)}</div>` +
+pics.map((id,i)=>`<div class="slide"><img data-i="${i}" data-id="${id}" alt="그날의 사진 ${i+1}"></div>`).join('') +
+`<div class="slide add"><button id="addSlide" aria-label="사진 넣기">+</button></div>`;
+sl.querySelectorAll('img[data-id]').forEach(im=>loadURL(im.dataset.id).then(u=>{ im.src=u; }));
+requestAnimationFrame(()=>{ sl.scrollLeft = pos*sl.clientWidth; syncDots(); });
+$('count').innerHTML = c.n ? `${c.m+1}월, <b>${c.n}</b>일을 달에 적었어요` : `${c.m+1}월의 달은 아직 비어 있어요`;
+}
+function syncDots(){}
+function renderSky(){
+const mi=moonInfo(cur);
+$('sky').innerHTML = `<span class="m">${skyMoonSVG(mi,34)}</span><span><span class="lbl" style="font-size:13px;color:var(--soft)">오늘의 달 </span><b>${mi.name}</b><small>밝기 ${Math.round(mi.k*100)}%</small></span>`;
+}
+function setLight(){   // 달 초에는 동쪽(오른쪽)에서, 말일로 갈수록 서쪽(왼쪽)에서 빛이 들어옴
+const days=new Date(cur.getFullYear(),cur.getMonth()+1,0).getDate(), p=(cur.getDate()-1)/(days-1);
+const r=document.documentElement.style;
+r.setProperty('--lx', (85-p*70).toFixed(1)+'%');
+r.setProperty('--bx', (78-p*56).toFixed(1)+'%');
+r.setProperty('--dl', (0.05+ (1-p)*0.3).toFixed(2));
+r.setProperty('--dr', (0.05+ p*0.3).toFixed(2));
+}
+function render(){
+const k=K(), isToday=cur.getTime()===today.getTime();
+$('dTitle').textContent = `${k.m+1}월 ${k.d}일`;
+$('dSub').textContent = `${k.y}년 ${WD[cur.getDay()]}요일 · 눌러서 달력`;
+$('prev').disabled = cur<=START; $('next').disabled = cur>=END;
+$('toToday').hidden = isToday || !inRange(today);
+const nt=$('note');
+if (today<START && dkey(cur)===dkey(START)){ nt.hidden=false; nt.textContent='11월 15일, 내일부터 이 일기장이 시작돼요. 미리 써 둬도 괜찮아요.'; }
+else nt.hidden=true;
+$('nowYr').textContent = `${k.y}년`;
+$('nowTag').textContent = isToday ? '올해 오늘' : (cur>today ? '아직 오지 않은 날' : '올해 이날');
+if (k.oldOk){
+$('oldCard').hidden=false; $('oldMini').hidden=true;
+$('oldYr').textContent = `${k.y-1}년`;
+const o=E[k.old]||{}, oe=$('oldEd');
+$('oldFeels').innerHTML = (o.em||[]).map(f=>feelChip(f)).join('');
+if (document.activeElement!==oe){ oe.innerHTML = clean(o.h); }
+oe.style.fontFamily = `"${o.f||'Gowun Batang'}", serif`;
+oe.contentEditable = editingOld ? 'true' : 'false';
+oe.classList.toggle('view', !editingOld);
+if (!editingOld && !textOf(o.h)) oe.innerHTML = '';
+oe.dataset.ph = editingOld ? '작년 이날, 기억나는 대로' : '작년 이날은 비어 있어요';
+$('oldBtn').textContent = editingOld ? '다 썼어요' : (textOf(o.h) ? '작년 기록 고치기' : '작년 기록 쓰기');
+const op=(o.p||[]).length; $('oldPics').hidden=!op; $('oldPics').textContent=`그날 사진 ${op}장 보기`;
+} else {
+$('oldCard').hidden=true; $('oldMini').hidden=false;
+$('oldMini').textContent = k.y===2026 ? '덤으로 받은 한 달 반이에요. 여기 쓴 글은 2027년 이날 위쪽에 다시 떠올라요.'
+: '2027년은 첫 해예요. 오늘 쓴 글이 2028년 이날 위쪽에 다시 떠올라요.';
+}
+const e=E[k.now]||{}, ed=$('ed');
+if (document.activeElement!==ed) ed.innerHTML = clean(e.h);
+ed.style.fontFamily = `"${e.f||'Gowun Batang'}", serif`;
+$('dayFont').textContent = fontName(e.f||'Gowun Batang');
+$('dayFont').style.fontFamily = `"${e.f||'Gowun Batang'}", serif`;
+const np=(e.p||[]).length; $('nowPics').textContent = np ? `사진 ${np}장` : '';
+renderSky(); renderMind(); drawMoon();
+}
+function queue(k, wait){
+setStatus('쓰는 중…'); clearTimeout(timers[k]);
+timers[k] = setTimeout(()=>saveEntry(k), wait==null?700:wait);
+}
+async function saveEntry(k){
+delete timers[k];
+const e=E[k];
+try { if (has(e) || (e && e.f)) await put('entries',k,e); else { delete E[k]; await del('entries',k); } setStatus(IDB_OK?'저장됨':'임시 저장됨 (앱을 닫으면 사라질 수 있어요)', !IDB_OK); }
+catch(err){ setStatus('저장 실패', true); }
+const c=moonCount(); $('count').innerHTML = c.n ? `${c.m+1}월, <b>${c.n}</b>일을 달에 적었어요` : `${c.m+1}월의 달은 아직 비어 있어요`;
+}
+function flushAll(){ Object.keys(timers).forEach(k=>{ clearTimeout(timers[k]); saveEntry(k); }); }
+function go(dt){ flushAll(); editingOld=false; pick=null; cur=clamp(new Date(dt)); cur.setHours(0,0,0,0); render(); }
+function bindEditor(el, which){
+el.addEventListener('input', ()=>{
+if (!el.textContent.trim() && !el.querySelector('img')) { if (el.innerHTML!=='') el.innerHTML=''; }
+const k = which==='now' ? K().now : K().old;
+entry(k).h = clean(el.innerHTML); queue(k);
+});
+el.addEventListener('blur', ()=>setTimeout(()=>{ if(!document.activeElement || !document.activeElement.closest('.ed')){ flushAll(); } }, 50));
+}
+bindEditor($('ed'),'now'); bindEditor($('oldEd'),'old');
+let saved=null, activeEd=null;
+document.addEventListener('selectionchange', ()=>{
+const s=getSelection(); if(!s.rangeCount) return;
+const n=s.anchorNode, ed=n && (n.nodeType===1?n:n.parentElement)?.closest('.ed[contenteditable=true]');
+if (ed && !s.isCollapsed){ saved=s.getRangeAt(0).cloneRange(); activeEd=ed; showTb(true); }
+else if (!tbBusy) showTb(false);
+});
+let tbBusy=false;
+document.addEventListener('focusout', ()=>setTimeout(()=>{ const a=document.activeElement; if(!a || !a.closest || !a.closest('.ed[contenteditable=true]')) showTb(false); }, 120));
+function showTb(on){ if(on===!$('tb').hidden) return; $('tb').hidden=!on; document.body.classList.toggle('typing',on); if(on) renderTb(); }
+function renderTb(){
+$('tbFonts').innerHTML = allFonts().map(f=>`<button class="chip" data-fam="${f.fam}" style="font-family:'${f.fam}',serif">${f.name}</button>`).join('');
+}
+function applyCmd(fn){
+if (!activeEd) return; tbBusy=true; setTimeout(()=>{ tbBusy=false; }, 300);
+activeEd.focus({preventScroll:true});
+if (saved){ const s=getSelection(); s.removeAllRanges(); s.addRange(saved); }
+try { document.execCommand('styleWithCSS', false, true); } catch(e){}
+fn();
+activeEd.dispatchEvent(new Event('input'));
+}
+$('tb').addEventListener('pointerdown', e=>{ if(e.target.closest('button')) e.preventDefault(); });
+$('tb').addEventListener('mousedown', e=>{ if(e.target.closest('button')) e.preventDefault(); });
+$('tb').addEventListener('click', e=>{
+const b=e.target.closest('button'); if(!b) return;
+if (b.dataset.fam) applyCmd(()=>document.execCommand('fontName', false, b.dataset.fam));
+else if (b.dataset.act==='title') applyCmd(()=>{ document.execCommand('fontSize', false, '5'); document.execCommand('bold'); });
+else if (b.dataset.act==='bold') applyCmd(()=>document.execCommand('bold'));
+else if (b.dataset.act==='plain') applyCmd(()=>document.execCommand('removeFormat'));
+});
+if (window.visualViewport){
+const vv=window.visualViewport;
+const fix=()=>{ const off=Math.max(0, innerHeight - vv.height - vv.offsetTop); $('tb').style.bottom = off+'px'; };
+vv.addEventListener('resize',fix); vv.addEventListener('scroll',fix);
+}
+async function loadURL(id){ if(PURL[id]) return PURL[id]; const b=await getP(id); if(!b) return ''; return PURL[id]=URL.createObjectURL(b); }
+async function compress(file){
+try {
+const bmp = await createImageBitmap(file, {imageOrientation:'from-image'});
+const s=Math.min(1, 1600/Math.max(bmp.width,bmp.height));
+const c=document.createElement('canvas'); c.width=Math.round(bmp.width*s); c.height=Math.round(bmp.height*s);
+c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+return await new Promise(r=>c.toBlob(b=>r(b||file),'image/jpeg',.86));
+} catch(e){ return file; }
+}
+const pickPhoto = () => $('photoFile').click();
+$('photoFile').addEventListener('change', async e=>{
+const files=[...e.target.files]; e.target.value=''; if(!files.length) return;
+const k=K().now, en=entry(k); setStatus('사진 넣는 중…');
+for (const f of files){ const b=await compress(f); const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+await put('photos',id,b); PURL[id]=URL.createObjectURL(b); en.p=(en.p||[]).concat(id); }
+await saveEntry(k); render();
+requestAnimationFrame(()=>{ const sl=$('slider'); sl.scrollLeft = (en.p.length)*sl.clientWidth; syncDots(); });
+});
+$('slider').addEventListener('scroll', syncDots, {passive:true});
+$('slider').addEventListener('click', e=>{
+if (e.target.closest('#addSlide')) return pickPhoto();
+const im=e.target.closest('img[data-i]'); if (im) openViewer(K().now, +im.dataset.i);
+});
+$('oldPics').addEventListener('click', ()=>openViewer(K().old, 0));
+async function openViewer(k, i){
+vKey=k; vList=((E[k]||{}).p||[]).slice(); vIdx=i; if(!vList.length) return;
+$('vDel').hidden = k!==K().now;
+$('viewer').hidden=false; await showV();
+}
+async function showV(){ $('vImg').src = await loadURL(vList[vIdx]); $('vCount').textContent = `${vIdx+1} / ${vList.length}`; }
+let vx=null;
+$('vArea').addEventListener('touchstart', e=>{ vx=e.touches[0].clientX; }, {passive:true});
+$('vArea').addEventListener('touchend', e=>{ if(vx===null) return; const dx=e.changedTouches[0].clientX-vx; vx=null;
+if (Math.abs(dx)>50 && vList.length>1){ vIdx=(vIdx+(dx<0?1:-1)+vList.length)%vList.length; showV(); } });
+$('vClose').addEventListener('click', ()=>{ $('viewer').hidden=true; });
+$('vDel').addEventListener('click', async ()=>{
+const id=vList[vIdx], en=entry(vKey); en.p=(en.p||[]).filter(x=>x!==id);
+await del('photos',id); if(PURL[id]){ URL.revokeObjectURL(PURL[id]); delete PURL[id]; }
+await saveEntry(vKey); vList=en.p.slice();
+if (!vList.length){ $('viewer').hidden=true; } else { vIdx=Math.min(vIdx,vList.length-1); showV(); }
+render(); requestAnimationFrame(()=>{ const sl=$('slider'); sl.scrollLeft=Math.min(vIdx+1,vList.length)*sl.clientWidth; syncDots(); });
+});
+const openSheet = id => { flushAll(); $(id).hidden=false; };
+document.querySelectorAll('.sheet').forEach(s=>s.addEventListener('click', e=>{ if(e.target===s || e.target.closest('[data-close]')) s.hidden=true; }));
+function renderCal(){
+const y=calMonth.getFullYear(), m=calMonth.getMonth();
+$('mTitle').textContent = `${y}년 ${m+1}월`;
+$('mPrev').disabled = new Date(y,m,1)<=new Date(START.getFullYear(),START.getMonth(),1);
+$('mNext').disabled = new Date(y,m,1)>=new Date(END.getFullYear(),END.getMonth(),1);
+const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
+let h = WD.map(w=>`<div class="wd">${w}</div>`).join('');
+for (let i=0;i<first;i++) h+=`<span class="day out"></span>`;
+for (let d=1; d<=days; d++){
+const dt=new Date(y,m,d), ok=inRange(dt), n=E[key(y,m,d)];
+const od=new Date(y-1,m,d), o=inRange(od)?E[dkey(od)]:null;
+const sel=dkey(dt)===dkey(cur), td=dkey(dt)===dkey(today);
+const mi = ok ? `<span class="m${has(n)?'':' dim'}">${skyMoonSVG(moonInfo(dt),18)}</span>` : `<span class="m"></span>`;
+h += `<button class="day${sel?' sel':''}${td?' today':''}" data-d="${d}" ${ok?'':'disabled'} aria-label="${m+1}월 ${d}일"><span class="n">${d}</span>${mi}${has(o)?'<i class="od"></i>':''}</button>`;
+}
+$('grid').innerHTML=h;
+}
+const openCal = () => { calMonth=new Date(cur.getFullYear(),cur.getMonth(),1); renderCal(); openSheet('calSheet'); };
+$('openCal').addEventListener('click', openCal);
+$('dateBtn').addEventListener('click', openCal);
+$('mPrev').addEventListener('click', ()=>{ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()-1,1); renderCal(); });
+$('mNext').addEventListener('click', ()=>{ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+1,1); renderCal(); });
+$('grid').addEventListener('click', e=>{ const b=e.target.closest('.day[data-d]'); if(!b||b.disabled) return; $('calSheet').hidden=true; go(new Date(calMonth.getFullYear(),calMonth.getMonth(),+b.dataset.d)); });
+function renderFonts(){
+const curF = (E[K().now]||{}).f || 'Gowun Batang';
+$('flist').innerHTML = allFonts().map(f=>`<div class="frow${f.fam===curF?' on':''}"><button class="pick" data-fam="${f.fam}"><span class="fn">${f.name}${f.id?' · 내가 추가':''}</span><span class="fs" style="font-family:'${f.fam}',serif">오늘의 달을 여기에 적어요</span></button>${f.id?`<button class="del" data-id="${f.id}">빼기</button>`:''}</div>`).join('');
+}
+$('dayFont').addEventListener('click', ()=>{ renderFonts(); openSheet('fontSheet'); });
+$('flist').addEventListener('click', async e=>{
+const p=e.target.closest('.pick'), d=e.target.closest('.del');
+if (p){ const k=K().now; entry(k).f = p.dataset.fam==='Gowun Batang'?null:p.dataset.fam; await saveEntry(k); $('fontSheet').hidden=true; render(); }
+if (d){ const id=d.dataset.id; FONTS=FONTS.filter(f=>f.id!==id); await del('fonts',id); renderFonts(); }
+});
+async function addFont(id, name, blob){
+const fam='uf_'+id;
+try { const ff=new FontFace(fam, await blob.arrayBuffer()); await ff.load(); document.fonts.add(ff); } catch(e){ return false; }
+FONTS.push({id,name,fam}); return true;
+}
+$('fontFile').addEventListener('change', async e=>{
+  const files=[...e.target.files]; e.target.value='';
+let bad=0;
+for (const f of files){ const id='f'+Date.now().toString(36)+Math.random().toString(36).slice(2,5); const name=f.name.replace(/\.[^.]+$/,'');
+if (await addFont(id,name,f)) await put('fonts',id,{name,blob:f}); else bad++; }
+renderFonts(); if (bad) alertMsg(`${bad}개는 글씨체 파일로 읽지 못했어요`);
+});
+function alertMsg(t){ setStatus(t, true); }
+const n = (w,...c) => ({w,c});
+const EMO = {   // 감정 단어 목록 전체(87개)를 4단계까지
+'+':[
+n('기쁘다', n('반갑다'), n('흐뭇하다', n('행복하다', n('벅차다')))),
+n('즐겁다', n('재미있다', n('신나다', n('흥분되다'))), n('유쾌하다', n('통쾌하다', n('짜릿하다')))),
+n('안심되다', n('다행스럽다', n('홀가분하다', n('후련하다'))), n('상쾌하다', n('시원하다'))),
+n('고맙다', n('감사하다', n('감격스럽다')), n('든든하다')),
+n('뿌듯하다', n('만족스럽다', n('흡족하다')), n('자랑스럽다')),
+n('설레다', n('궁금하다', n('놀랍다')), n('간절하다'), n('사랑스럽다'))
+],
+'-':[
+n('걱정스럽다', n('불안하다', n('무섭다', n('혼란스럽다')), n('두렵다')), n('긴장되다', n('떨리다')), n('조급하다', n('막막하다'))),
+n('서운하다', n('섭섭하다', n('속상하다', n('서럽다'))), n('실망스럽다', n('허전하다', n('허무하다')))),
+n('짜증스럽다', n('귀찮다', n('지루하다')), n('불편하다', n('못마땅하다', n('불쾌하다'), n('불만스럽다'))), n('부럽다', n('샘나다'))),
+n('화나다', n('억울하다', n('분하다', n('원통하다'))), n('괘씸하다', n('원망스럽다')), n('얄밉다', n('약오르다'))),
+n('힘들다', n('괴롭다', n('우울하다')), n('외롭다'), n('답답하다')),
+n('슬프다', n('마음이 아프다', n('안타깝다', n('애처롭다')), n('불쌍하다', n('가엾다'), n('측은하다'))), n('후회스럽다', n('미안하다'))),
+n('당황스럽다', n('어이없다'), n('곤란하다', n('난처하다')), n('어색하다', n('민망하다', n('무안하다'))), n('부끄럽다', n('창피하다')))
+]
+};
+const FACE = { '+':'<span class="sym">+</span>', '-':'<span class="sym">−</span>' };
+const DEPTHF=[.25,.5,.75,1];
+const depthMoons = d => Array.from({length:4},(_,i)=>`<svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" style="fill:var(--mbase);stroke:var(--medge)" stroke-width=".6"/>${i<d?`<path d="${moonPath(7,7,6,DEPTHF[i])}" style="fill:var(--mlo)"/>`:''}</svg>`).join('');
+let pick=null;   // {s:'+'|'-', path:[단어...]}
+function nodesAt(p){ let list=EMO[p.s]; for (const w of p.path){ const nd=list.find(x=>x.w===w); list = nd ? nd.c : []; } return list; }
+const feelChip = (f,i) => `<span class="feel ${f.s==='+'?'pos':'neg'}"><span class="dm" title="깊이 ${f.path.length}">${depthMoons(f.path.length)}</span>${f.path[f.path.length-1]}${i!=null?`<button data-rm="${i}" aria-label="빼기">×</button>`:'&nbsp;'}</span>`;
+function renderMind(){
+const e=E[K().now]||{}, em=e.em||[];
+let h = `<div class="mind"><span class="lbl">오늘의 마음</span>`+
+['+','-'].map(sg=>`<button class="face" data-s="${sg}" aria-pressed="${pick&&pick.s===sg}" aria-label="${sg==='+'?'좋은 쪽 마음':'힘든 쪽 마음'}">${FACE[sg]}</button>`).join('')+`</div>`;
+if (em.length) h += `<div class="feels">${em.map((f,i)=>feelChip(f,i)).join('')}</div>`;
+if (pick){
+const opts=nodesAt(pick), d=pick.path.length;
+h += `<div class="picker">`;
+if (!d) h += `<p class="q">지금 마음에 가장 가까운 말은요?</p>`;
+else h += `<div class="path">${pick.path.map((w,i)=>(i?'<i>›</i>':'')+w).join(' ')}</div><div class="depth">${depthMoons(d)} 깊이 ${d}</div>`+
+(opts.length ? `<p class="q">조금 더 들여다보면, 이런 마음도 있나요?</p>` : `<p class="q">가장 깊은 곳까지 들여다봤어요.</p>`);
+h += `<div class="words">${opts.map(o=>`<button class="word" data-w="${o.w}">${o.w}</button>`).join('')}</div>`;
+h += `<div class="pacts"><span>${d?`<button class="link" data-act="back">‹ 뒤로</button>`:''}</span>${d?`<button class="link" data-act="keep" style="color:var(--lilac)">여기까지 담기</button>`:''}</div></div>`;
+}
+$('mind').innerHTML = h;
+}
+$('mind').addEventListener('click', async e=>{
+const k=K().now, b=e.target.closest('button'); if(!b) return;
+if (b.dataset.s){ pick = (pick&&pick.s===b.dataset.s) ? null : {s:b.dataset.s, path:[]}; }
+else if (b.dataset.w){ pick.path.push(b.dataset.w); }
+else if (b.dataset.rm!=null){ const en=entry(k); en.em.splice(+b.dataset.rm,1); await saveEntry(k); }
+else if (b.dataset.act==='close'){ pick=null; }
+else if (b.dataset.act==='back'){ pick.path.pop(); }
+else if (b.dataset.act==='keep'){ const en=entry(k); en.em=(en.em||[]).concat({s:pick.s,path:pick.path.slice()}); pick=null; await saveEntry(k); }
+renderMind();
+});
+const SEA='';
+let MYBG=null, curBg='photo:sea';
+const lum = hex => { const v=parseInt(hex.slice(1),16), c=[v>>16&255,v>>8&255,v&255].map(x=>{x/=255;return x<=.03928?x/12.92:((x+.055)/1.055)**2.4;}); return .2126*c[0]+.7152*c[1]+.0722*c[2]; };
+function applyBg(v){
+if (v==='photo:sea' && !SEA) v = MYBG ? 'photo:mine' : '#0b2d48';
+if (v==='photo:mine' && !MYBG) v = SEA ? 'photo:sea' : '#0b2d48';
+const isPhoto = v.startsWith('photo:');
+if (!isPhoto && !/^#[0-9a-f]{6}$/i.test(v||'')) v='photo:sea';
+curBg = v;
+const photo = curBg.startsWith('photo:');
+const hex = photo ? '#05263f' : curBg;
+document.documentElement.style.setProperty('--sky', hex);
+document.body.classList.toggle('photo', photo);
+document.body.classList.toggle('light', !photo && lum(hex)>.35);
+$('bgimg').style.backgroundImage = photo ? `url("${curBg==='photo:mine'?MYBG:SEA}")` : '';
+document.querySelector('meta[name=theme-color]').content = photo ? '#0a3550' : hex;
+try{ localStorage.setItem('moon-bg',curBg); }catch(e){}
+if (IDB_OK) idb.put('fonts','__bg',{bg:curBg}).catch(()=>{});
+}
+applyBg('photo:sea');
+$('bgFile').addEventListener('change', async e=>{
+const f=e.target.files[0]; e.target.value=''; if(!f) return;
+const b=await compress(f); MYBG=await toDataURL(b);
+try{ await put('fonts','__bgphoto',{data:MYBG}); }catch(err){}
+applyBg('photo:mine');
+});
+function toDataURL(b){ return new Promise(r=>{ const fr=new FileReader(); fr.onload=()=>r(fr.result); fr.readAsDataURL(b); }); }
+const fromDataURL = u => { const [h,d]=u.split(','); const mime=(h.match(/data:([^;]+)/)||[])[1]||'application/octet-stream'; const bin=atob(d); const a=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) a[i]=bin.charCodeAt(i); return new Blob([a],{type:mime}); };
+$('openBackup').addEventListener('click', ()=>{ $('bkMsg').textContent=''; openSheet('backupSheet'); });
+$('exp').addEventListener('click', async ()=>{
+flushAll(); $('bkMsg').textContent='백업 파일 만드는 중…';
+const photos={}, fonts={};
+for (const k in E) for (const id of (E[k].p||[])){ const b=await getP(id); if(b) photos[id]=await toDataURL(b); }
+let fs={}; try{ fs = IDB_OK ? await idb.all('fonts') : MEM.fonts; }catch(e){}
+for (const id in fs){ if(fs[id] && fs[id].blob) fonts[id]={name:fs[id].name, data:await toDataURL(fs[id].blob)}; }
+const bg=curBg, bgPhoto=MYBG;
+const json=JSON.stringify({app:'two-year-moon-diary',v:2,saved:new Date().toISOString(),entries:E,photos,fonts,bg,bgPhoto});
+if (window.claude){ $('bkMsg').textContent='Claude 안에서는 파일 받기가 막혀 있어요. 폰에 설치한 앱에서 눌러 주세요.'; return; }
+const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([json],{type:'application/json'}));
+a.download=`달일기-백업-${dkey(today)}.json`; document.body.appendChild(a); a.click(); a.remove();
+$('bkMsg').textContent=`백업 파일을 받았어요 (${(json.length/1048576).toFixed(1)}MB). 다운로드 폴더를 확인해 보세요.`;
+});
+$('imp').addEventListener('change', async e=>{
+const f=e.target.files[0]; e.target.value=''; if(!f) return;
+$('bkMsg').textContent='불러오는 중…';
+try {
+const d=JSON.parse(await f.text()); let n=0;
+for (const id in (d.fonts||{})){ if(!FONTS.some(x=>x.id===id)){ const b=fromDataURL(d.fonts[id].data); if(await addFont(id,d.fonts[id].name,b)) await put('fonts',id,{name:d.fonts[id].name,blob:b}); } }
+for (const id in (d.photos||{})) await put('photos',id,fromDataURL(d.photos[id]));
+for (const k in (d.entries||{})){ if(!/^\d{4}-\d{2}-\d{2}$/.test(k)) continue; const x=d.entries[k]||{};
+E[k]={h:clean(String(x.h||'')),em:Array.isArray(x.em)?x.em.filter(f=>f&&(f.s==='+'||f.s==='-')&&Array.isArray(f.path)).map(f=>({s:f.s,path:f.path.map(String).slice(0,6)})):[],f:x.f||null,p:Array.isArray(x.p)?x.p.filter(id=>d.photos&&d.photos[id]):[]}; await put('entries',k,E[k]); n++; }
+if (typeof d.bgPhoto==='string' && d.bgPhoto.startsWith('data:image/')){ MYBG=d.bgPhoto; await put('fonts','__bgphoto',{data:MYBG}); applyBg('photo:mine'); }
+$('bkMsg').textContent=`${n}일치 일기를 불러왔어요.`; render();
+} catch(err){ $('bkMsg').textContent='백업 파일을 읽지 못했어요.'; }
+});
+$('prev').addEventListener('click', ()=>{ const d=new Date(cur); d.setDate(d.getDate()-1); go(d); });
+$('next').addEventListener('click', ()=>{ const d=new Date(cur); d.setDate(d.getDate()+1); go(d); });
+$('toToday').addEventListener('click', ()=>go(today));
+$('oldBtn').addEventListener('click', ()=>{ flushAll(); editingOld=!editingOld; render(); if(editingOld) $('oldEd').focus(); });
+window.addEventListener('pagehide', flushAll);
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) flushAll(); });
+(function(){ const s=$('stars'), W=innerWidth, H=innerHeight; s.setAttribute('viewBox',`0 0 ${W} ${H}`);
+let h=''; for(let i=0;i<70;i++){ const x=Math.random()*W, y=Math.random()*H*.9, r=Math.random()*1.1+.3;
+h+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="currentColor" opacity="${(Math.random()*.5+.25).toFixed(2)}"${i%4===0?` class="tw" style="animation-delay:${(Math.random()*4).toFixed(1)}s"`:''}/>`; }
+s.innerHTML=h; })();
+render();
+(async ()=>{
+try {
+E = await idb.all('entries');
+const fs = await idb.all('fonts');
+if (fs.__bgphoto && fs.__bgphoto.data){ MYBG=fs.__bgphoto.data; applyBg('photo:mine'); }
+for (const id in fs){ if(id==='__bg'||id==='__bgphoto') continue; await addFont(id, fs[id].name, fs[id].blob); }
+} catch(e){ IDB_OK=false; setStatus('이 화면에서는 저장이 안 될 수 있어요', true); }
+render();
+})();
+if ('serviceWorker' in navigator && location.protocol==='https:' && !window.claude){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+}
+</script>
+</body>
+</html>
+  
